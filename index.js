@@ -1,8 +1,7 @@
-const hexValues = new Map ([
-  ["A",10], ["B",11], ["C",12], ["D",13], ["E",14], ["F",15]
-])
-
 function hexToDecimals(inputHex) {
+  let hexValues = new Map ([
+  ["A",10], ["B",11], ["C",12], 
+  ["D",13], ["E",14], ["F",15] ])
   //Make sure to store as a string
   let hexAsString = inputHex.toString();
   let decimalArray = [];
@@ -103,5 +102,3 @@ let hexAsDecimal = arrayToDecimal(decimals);
 
 console.log("\nYour Hex value as a binary is:\n" + hexAsBinary);
 console.log("\nYour Hex value as a decimal is:\n" + hexAsDecimal);
-
-
