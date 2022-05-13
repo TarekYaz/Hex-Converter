@@ -1,28 +1,48 @@
-function hexToDecimals(inputHex) {
+function hexToArray(inputHex) {
   let hexValues = new Map ([
   ["A",10], ["B",11], ["C",12], 
-  ["D",13], ["E",14], ["F",15] ])
-  //Make sure to store as a string
-  let hexAsString = inputHex.toString();
+  ["D",13], ["E",14], ["F",15] ]);
+  
+  let hexString = inputHex;
   let decimalArray = [];
   let msg = "";
-  //loop for each character in hex string
-  for (let i=0; i < hexAsString.length; i++) {
-    //check if hex character matches a key in the A-F map
-    if (hexValues.has(hexAsString[i])) {
-      //if A-F, add the mapped value of it to an array
-      decimalArray.push(hexValues.get(hexAsString[i]));
-      msg += (hexAsString[i] + "=" + hexValues.get(hexAsString[i]));
+  
+  for (let i=0; i < hexString.length; i++) {
+    let x = hexString[i];
+    
+    if (hexValues.has(x)) {      
+      decimalArray.push(hexValues.get(x));
+      msg += (x + "=" + hexValues.get(x));
       msg += ' ';
-    } else {
-      //else, 0-9 values go straight into the array
-      decimalArray.push(Number(hexAsString[i]));
+    } else {      
+      decimalArray.push(Number(x));
     }    
-  }
-  //return an array of individual decimal values
+  }  
   console.log(msg);
   console.log("So we have: " + decimalArray);
   return decimalArray;
+}
+
+function arrayToBinary(decimals) {
+  let finalBinary = "";
+
+  for (let i = 0; i < decimals.length; i++) {
+    let decimal = decimals[i];
+    let fourBitBinary = decimalToBinary(decimal);
+    
+    finalBinary += fourBitBinary.join('');    
+  }
+  return finalBinary;
+}
+
+function arrayToDecimal(decimals) {
+  let finalDecimal = 0;
+  //for each: value * (16^i). Making sure to go right to left in Array
+  for (let i = 0; i < decimals.length; i++) {
+    let decimal = parseInt(decimals[decimals.length-1-i]);
+    finalDecimal += decimal * (16 ** i);
+  }
+  return finalDecimal;
 }
 
 function decimalToBinary(decimal) {
@@ -38,29 +58,6 @@ function decimalToBinary(decimal) {
     decimal /= 2;
   }
   return binary;
-}
-
-function arrayToBinary(decimals) {
-  let finalBinary = "";
-
-  for (let i = 0; i < decimals.length; i++) {
-    let decimal = decimals[i];
-    let fourBitBinary = decimalToBinary(decimal);
-    
-    //console.log("\nTake number " + decimal);
-    finalBinary += fourBitBinary.join("");    
-  }
-  return finalBinary;
-}
-
-function arrayToDecimal(decimals) {
-  let finalDecimal = 0;
-  //for each: value * (16^i). Making sure to go right to left in Array
-  for (let i = 0; i < decimals.length; i++) {
-    let decimal = parseInt(decimals[decimals.length-1-i]);
-    finalDecimal += decimal * (16 ** i);
-  }
-  return finalDecimal;
 }
 
 function explain(decimal) {
@@ -87,9 +84,69 @@ function explain(decimal) {
   return msg;
 }
 
-//store user input
-let user = prompt("Enter any hex value");
-let decimals = hexToDecimals(user);
+function chooseConverter() {
+  let options = ["hex", "decimal", "binary"];
+  let choice = prompt("Choose between 1-3");
+  try {
+    if (typeof options[choice-1] == "undefined") throw "Invalid";
+  } catch (err) {
+    console.log("Error: " + err + " value chosen");
+    chooseConverter();
+  }
+
+  return options[choice-1];
+  
+
+  /*
+  let list = ["Hex", "Decimal", "Binary"];
+  
+  console.log("Convert:\n" + "(1) Hex (2) Decimal (3) Binary");
+  
+  let c1 = Number(prompt("Pick a number"));
+  
+  console.log("\nto:\n" + "(1) Hex (2) Decimal (3) Binary");
+  
+  let c2 = Number(prompt("Pick a number"));
+    
+  if (c1 != c2 && Math.min(c1,c2) > 0 && Math.max(c1,c2) < 4) {
+    console.log(list[c1 - 1] + " to " + list[c2 - 1]);  
+  } else {
+    console.log("\nPlease pick a valid converter\n");
+    chooseConverter();
+  }
+  */
+}
+
+function removeLeadingZeros(value) {
+  let x = value.split('');
+   
+  while (x[0] == '0') {
+    x.shift();
+  }
+  
+  return x.join("");
+}
+
+//----------------------------------------------------------
+
+let calculate = require("./calculate.js");
+
+console.log("What are you converting from?\n");
+console.log("(1) Hex (2) Decimal (3) Binary\n");
+let choice = chooseConverter();
+let msg = "Enter a " + choice + " value";
+let user = removeLeadingZeros(prompt(msg));
+
+if (choice == "decimal") {
+  //DECIMAL TO BINARY AND HEX
+  console.log("DECIMAL TO HEX:" + calculate.decimalTo(user, 16));
+  console.log("DECIMAL TO BINARY:" + calculate.decimalTo(user, 2));
+}
+
+if (choice == "hex") {
+  //HEX TO BINARY AND DECIMAL
+console.log("\nHEX TO DEC/BIN\n");
+let decimals = hexToArray(user);
 
 console.log("\nLet's calculate the binary values of each below.")
 
@@ -102,3 +159,5 @@ let hexAsDecimal = arrayToDecimal(decimals);
 
 console.log("\nYour Hex value as a binary is:\n" + hexAsBinary);
 console.log("\nYour Hex value as a decimal is:\n" + hexAsDecimal);
+}
+
