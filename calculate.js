@@ -37,46 +37,6 @@ function binaryToNibbles(binary) {
     }
   }
   return bits.join("");
-  /*
-  let bits = binary.split("")
-  let nibble = [];
-  let finalBin = [];
-  //start off with leading 0's if length not divisible by 4
-  if (binary.length % 4 != 0) {
-    nibble = ['0', '0', '0', '0'];
-    nibble.splice(0, binary.length % 4);
-  }
-  
-  while (bits.length > 0) {
-    nibble.push(bits.shift());
-    if (nibble.length == 4) {
-      finalBin.push(nibble.join(""));
-      nibble = []
-    }
-  }
-
-  return finalBin;
-  */
-  /*
-  let bits = binary.split("");
-  let nibble = [];
-  let finalBin = [];
-  
-  while (bits.length > 0) {
-    nibble.push(bits.shift());
-    if (nibble.length == 4) {
-      finalBin.push(nibble.join(""));
-      nibble = []
-    }
-  }
-
-  let lastNibble = "";
-  if (nibble.length > 0) {
-    lastNibble = (nibble.join("")).padStart(4,0);
-    finalBin.push(lastNibble);      
-  }
-   
-  return finalBin;  */
 }
 
 function binaryToHex(binary) {
